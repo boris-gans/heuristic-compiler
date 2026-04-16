@@ -7,10 +7,10 @@
  * getRuleLineRanges() via an imperative ref for Issue #7 (rule highlighting).
  */
 
-import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import Editor from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
-import { parseRuleLineRanges } from './parseRuleLineRanges'
+import { parseRuleLineRanges, parseRuleFullRanges } from './parseRuleLineRanges'
 
 // JSON Schema for the heuristic rules format.
 // Registered once per editor mount via monaco.languages.json.jsonDefaults.
@@ -114,16 +114,29 @@ const RULES_SCHEMA = {
 export interface RuleEditorHandle {
   /** Returns a map of rule name → 1-indexed start line for each rule in the array. */
   getRuleLineRanges: () => Map<string, number>
+  /** Scrolls the editor to center the given 1-indexed line. */
+  revealLine: (line: number) => void
 }
 
 interface RuleEditorProps {
   value: string
   onChange: (value: string) => void
+  /** Rule names to highlight after a simulation run. Pass an empty array to clear. */
+  appliedRules?: string[]
+  /** Called after decorations have been applied or cleared. */
+  onDecorationsReady?: () => void
 }
 
 const RuleEditor = forwardRef<RuleEditorHandle, RuleEditorProps>(
-  ({ value, onChange }, ref) => {
+  ({ value, onChange, appliedRules, onDecorationsReady }, ref) => {
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+    const decorationCollectionRef = useRef<editor.IEditorDecorationsCollection | null>(null)
+    const [editorReady, setEditorReady] = useState(false)
+    // Stable ref so we don't need onDecorationsReady in effect deps
+    const onDecorationsReadyRef = useRef(onDecorationsReady)
+    useEffect(() => {
+      onDecorationsReadyRef.current = onDecorationsReady
+    })
 
     const handleEditorMount = useCallback(
       (
@@ -131,6 +144,7 @@ const RuleEditor = forwardRef<RuleEditorHandle, RuleEditorProps>(
         monacoInstance: typeof import('monaco-editor'),
       ) => {
         editorRef.current = editorInstance
+        setEditorReady(true)
 
         // Register JSON schema for the rules format
         monacoInstance.languages.json.jsonDefaults.setDiagnosticsOptions({
@@ -151,6 +165,57 @@ const RuleEditor = forwardRef<RuleEditorHandle, RuleEditorProps>(
       [],
     )
 
+    // Apply / clear decorations whenever appliedRules changes or the editor becomes ready
+    useEffect(() => {
+      const editorInstance = editorRef.current
+      if (!editorInstance || !editorReady) return
+
+      const model = editorInstance.getModel()
+      if (!model) return
+
+      // Clear previous decorations
+      decorationCollectionRef.current?.clear()
+      decorationCollectionRef.current = null
+
+      if (!appliedRules || appliedRules.length === 0) {
+        onDecorationsReadyRef.current?.()
+        return
+      }
+
+      const ranges = parseRuleFullRanges(model.getValue())
+      const newDecorations: editor.IModelDeltaDecoration[] = []
+      let firstLine: number | null = null
+
+      for (const name of appliedRules) {
+        const range = ranges.get(name)
+        if (range) {
+          if (firstLine === null) firstLine = range.start
+          newDecorations.push({
+            range: {
+              startLineNumber: range.start,
+              startColumn: 1,
+              endLineNumber: range.end,
+              endColumn: model.getLineMaxColumn(range.end),
+            },
+            options: {
+              isWholeLine: true,
+              className: 'highlight-applied-rule',
+            },
+          })
+        }
+      }
+
+      if (newDecorations.length > 0) {
+        decorationCollectionRef.current =
+          editorInstance.createDecorationsCollection(newDecorations)
+        if (firstLine !== null) {
+          editorInstance.revealLineInCenter(firstLine)
+        }
+      }
+
+      onDecorationsReadyRef.current?.()
+    }, [appliedRules, editorReady])
+
     useImperativeHandle(ref, () => ({
       getRuleLineRanges(): Map<string, number> {
         const editorInstance = editorRef.current
@@ -158,6 +223,9 @@ const RuleEditor = forwardRef<RuleEditorHandle, RuleEditorProps>(
         const model = editorInstance.getModel()
         if (!model) return new Map()
         return parseRuleLineRanges(model.getValue())
+      },
+      revealLine(line: number): void {
+        editorRef.current?.revealLineInCenter(line)
       },
     }))
 
