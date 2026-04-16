@@ -1,0 +1,1662 @@
+{
+  "source": "documents/Session 06 - Regular Expressions.pdf",
+  "pages": [
+    {
+      "page_num": 1,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "AI:\nNATURAL LANGUAGE",
+          "bbox": [
+            790.9400024414062,
+            133.76998901367188,
+            1066.900390625,
+            212.36997985839844
+          ]
+        },
+        {
+          "type": "text",
+          "content": "PROCESSING",
+          "bbox": [
+            846.1400146484375,
+            226.87200927734375,
+            1018.8687133789062,
+            258.9360046386719
+          ]
+        },
+        {
+          "type": "text",
+          "content": "& \nSEMANTIC ANALYSIS",
+          "bbox": [
+            795.739990234375,
+            273.4700012207031,
+            1061.896240234375,
+            352.07000732421875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "BCSAI JAN-2025",
+          "bbox": [
+            877.4600219726562,
+            430.4700012207031,
+            980.3518676757812,
+            446.42999267578125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "PROF. DR. JUANJO MANJARÍN",
+          "bbox": [
+            846.5,
+            459.75,
+            1011.177734375,
+            475.7099914550781
+          ]
+        },
+        {
+          "type": "text",
+          "content": "AI: Natural Language Processing",
+          "bbox": [
+            123.58000183105469,
+            611.9760131835938,
+            310.1031799316406,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page1_img0.jpeg",
+          "width": 1344,
+          "height": 768
+        },
+        {
+          "type": "image",
+          "path": "output/images/page1_img1.png",
+          "width": 400,
+          "height": 450
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 2,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "SESSION 6: REGULAR EXPRESSIONS",
+          "bbox": [
+            111.86000061035156,
+            329.5,
+            505.0840148925781,
+            365.5
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Vector Space Models and Semantic Representation",
+          "bbox": [
+            111.88999938964844,
+            405.44000244140625,
+            441.96600341796875,
+            421.3999938964844
+          ]
+        },
+        {
+          "type": "text",
+          "content": "99\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page2_img0.png",
+          "width": 212,
+          "height": 238
+        },
+        {
+          "type": "image",
+          "path": "output/images/page2_img1.jpeg",
+          "width": 778,
+          "height": 1000
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 3,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "100\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page3_img0.png",
+          "width": 212,
+          "height": 238
+        },
+        {
+          "type": "image",
+          "path": "output/images/page3_img1.jpeg",
+          "width": 493,
+          "height": 600
+        }
+      ],
+      "tables": [
+        {
+          "page_index": 2,
+          "table_index": 0,
+          "bbox_page_px": [
+            1189,
+            219,
+            2166,
+            1103
+          ],
+          "detection_score": 0.922,
+          "column_source": "tatr",
+          "header_strategy": "top_band",
+          "structure_quality": 1.05,
+          "headers": [
+            "SESSION",
+            "CONTENTS"
+          ],
+          "rows": [
+            [
+              "",
+              ""
+            ],
+            [
+              "•",
+              "From Symbols to Spaces"
+            ],
+            [
+              "•",
+              "The Bag-of-Words Representation"
+            ],
+            [
+              "•",
+              "The Term-Document Matrix"
+            ],
+            [
+              "•",
+              "Words, Vectors, and Distributional Meaning"
+            ],
+            [
+              "•",
+              "Geometric View of Meaning"
+            ],
+            [
+              "•",
+              "Term Frequency-Inverse Document Frequency"
+            ],
+            [
+              "•",
+              "Latent Semantic Analysis"
+            ],
+            [
+              "•",
+              "HAL: Contextual Co-occurrence"
+            ],
+            [
+              "•",
+              "Practice"
+            ]
+          ],
+          "raw_cells": [
+            [
+              "",
+              ""
+            ],
+            [
+              "•",
+              "From Symbols to Spaces"
+            ],
+            [
+              "•",
+              "The Bag-of-Words Representation"
+            ],
+            [
+              "•",
+              "The Term-Document Matrix"
+            ],
+            [
+              "•",
+              "Words, Vectors, and Distributional Meaning"
+            ],
+            [
+              "•",
+              "Geometric View of Meaning"
+            ],
+            [
+              "•",
+              "Term Frequency-Inverse Document Frequency"
+            ],
+            [
+              "•",
+              "Latent Semantic Analysis"
+            ],
+            [
+              "•",
+              "HAL: Contextual Co-occurrence"
+            ],
+            [
+              "•",
+              "Practice"
+            ]
+          ],
+          "raw_above_header": [],
+          "page_text_above": "",
+          "page_text_below": "",
+          "needs_review": false,
+          "llm_context": "=== EXTRACTED HEADERS ===\n['SESSION', 'CONTENTS']"
+        }
+      ]
+    },
+    {
+      "page_num": 4,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "COURSE PROJECT PIPELINE",
+          "bbox": [
+            63.57600021362305,
+            99.0999755859375,
+            387.619140625,
+            135.0999755859375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Results: \n•\nAnalysis\n•\nWriting",
+          "bbox": [
+            684.9400024414062,
+            184.09197998046875,
+            759.7689819335938,
+            238.49000549316406
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Submission",
+          "bbox": [
+            915.5800170898438,
+            224.17001342773438,
+            990.9749145507812,
+            240.13002014160156
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Introduction",
+          "bbox": [
+            460.5400085449219,
+            224.239990234375,
+            543.0850830078125,
+            240.1999969482422
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Literature Review",
+          "bbox": [
+            215.39999389648438,
+            224.54998779296875,
+            331.812255859375,
+            240.50999450683594
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Week",
+          "bbox": [
+            63.04800033569336,
+            287.20001220703125,
+            104.57400512695312,
+            305.20001220703125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "26-31 Jan\n23 Feb –",
+          "bbox": [
+            134.3000030517578,
+            303.8900146484375,
+            636.5319213867188,
+            326.21002197265625
+          ]
+        },
+        {
+          "type": "text",
+          "content": "03 Apr\n24 April\n02-06Feb\n09-13 Feb\n16-20 Feb\n06-17 Apr\n20-24 Apr",
+          "bbox": [
+            247.72999572753906,
+            308.0799865722656,
+            983.4400024414062,
+            334.7300109863281
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Proposal",
+          "bbox": [
+            129.74000549316406,
+            385.86199951171875,
+            187.65005493164062,
+            401.84600830078125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Abstract",
+          "bbox": [
+            811.510009765625,
+            387.9900207519531,
+            870.4183349609375,
+            403.95001220703125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Modelling: \n•\nData collection,\n•\nData cleaning,\n•\nPreprocessing,\n•\nFeature \nExtraction,\n•\nModelling,\n•\nEvaluation\n•\nDeployment",
+          "bbox": [
+            550.27001953125,
+            391.9499816894531,
+            673.5389404296875,
+            561.5579833984375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Methodology",
+          "bbox": [
+            343.7300109863281,
+            392.19000244140625,
+            433.0740966796875,
+            408.1499938964844
+          ]
+        },
+        {
+          "type": "text",
+          "content": "and \nConclusions",
+          "bbox": [
+            799.8699951171875,
+            407.19000244140625,
+            878.4569702148438,
+            442.3499755859375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "101\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page4_img0.png",
+          "width": 212,
+          "height": 238
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 5,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "SESSION OBJECTIVES",
+          "bbox": [
+            166.33999633789062,
+            87.31198120117188,
+            388.2459716796875,
+            119.37598419189453
+          ]
+        },
+        {
+          "type": "text",
+          "content": "At this point in the course, we are about to move from explicit symbolic tools to \nprobabilistic models and, later, to neural architectures such as transformers. \nBefore making that transition, it is important to understand how raw text \nbecomes something a system can operate on in the first place.",
+          "bbox": [
+            109.08000183105469,
+            188.239990234375,
+            602.1199951171875,
+            251.83999633789062
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Regular expressions address this layer. They do not attempt to model meaning, \nintention, or context. Instead, they impose structure on text, making it possible \nto detect formats, enforce constraints, and extract specific elements. This is why \nthey appear here, immediately before classifiers and representation-learning \nmodels: they solve problems that must be addressed before learning can even \nbegin.",
+          "bbox": [
+            109.08000183105469,
+            273.0799865722656,
+            602.1254272460938,
+            369.1000061035156
+          ]
+        },
+        {
+          "type": "text",
+          "content": "This unit focuses on turning text into data. The central question is how \nunstructured language can be transformed into something that can be counted, \ncompared, weighted, and eventually classified.",
+          "bbox": [
+            109.08000183105469,
+            390.2200012207031,
+            602.1199951171875,
+            437.6199951171875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "The progression is conceptual as well as technical. Raw text is first structured \nthrough pattern detection, then summarized through counting and weighting, \nand only later fed into statistical models. Regular expressions represent the first \nstep in this progression. They are the point at which text stops being prose and \nstarts becoming an object of computation.",
+          "bbox": [
+            109.08000183105469,
+            458.8900146484375,
+            602.1199951171875,
+            538.6900024414062
+          ]
+        },
+        {
+          "type": "text",
+          "content": "102\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page5_img0.png",
+          "width": 212,
+          "height": 238
+        },
+        {
+          "type": "image",
+          "path": "output/images/page5_img1.jpeg",
+          "width": 797,
+          "height": 1024
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 6,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "WHAT ARE REGULAR EXPRESSIONS?",
+          "bbox": [
+            586.1799926757812,
+            101.99002075195312,
+            973.634521484375,
+            134.03001403808594
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Regular expressions are a formal language for specifying patterns in text. \nOperationally, they define text search strings. Formally, a regular expression can \nbe understood as an algebraic notation for characterizing a set of strings.",
+          "bbox": [
+            535.1300048828125,
+            209.07000732421875,
+            1028.1700439453125,
+            260.07000732421875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Originally introduced by Stephen Kleene in the context of automata theory, \nregular expressions describe families of strings using a finite set of symbols and \noperators. They are not arbitrary formulas, but constrained expressions whose \nstructure corresponds to regular languages.",
+          "bbox": [
+            535.1300048828125,
+            283.09197998046875,
+            1028.1754150390625,
+            352.1300048828125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "For example, the following regular expression describes a broad class of URLs:",
+          "bbox": [
+            535.1300048828125,
+            375.04998779296875,
+            1008.1600341796875,
+            390.04998779296875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "\\b(?:(?:https?|ftp):\\/\\/)?(?:www\\.)?[a-zA-Z0-9-]+(?:\\.[a-zA-",
+          "bbox": [
+            600.77001953125,
+            413.0719909667969,
+            959.1773681640625,
+            428.09600830078125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Z]{2,})(?:\\/[^\\s?#]*)?(?:\\?[^\\s#]*)?(?:#[^\\s]*)?\\b",
+          "bbox": [
+            633.6500244140625,
+            431.1199951171875,
+            926.094970703125,
+            446.1199951171875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "This \npattern \nmatches \nstrings \nsuch \nas \nhttps://www.example.com \nor \nhttp://example.co.uk/path/to/page",
+          "bbox": [
+            535.1300048828125,
+            469.1600036621094,
+            1028.1700439453125,
+            502.1600036621094
+          ]
+        },
+        {
+          "type": "text",
+          "content": "The expression does not “understand” what a URL is. It specifies a structural \npattern that valid URLs typically satisfy.",
+          "bbox": [
+            535.1300048828125,
+            525.0800170898438,
+            1028.1700439453125,
+            558.083984375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "103\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page6_img0.png",
+          "width": 212,
+          "height": 238
+        },
+        {
+          "type": "image",
+          "path": "output/images/page6_img1.jpeg",
+          "width": 766,
+          "height": 1024
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 7,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "REGULAR EXPRESSIONS IN THE NLP PIPELINE",
+          "bbox": [
+            535.0999755859375,
+            160.8699951171875,
+            1014.0646362304688,
+            192.9099884033203
+          ]
+        },
+        {
+          "type": "text",
+          "content": "In a realistic NLP pipeline, regular expressions appear early. They are used \nduring data cleaning, preprocessing, and feature preparation, long before any \nclassifier or neural model is applied.",
+          "bbox": [
+            535.1300048828125,
+            240.44000244140625,
+            1028.1700439453125,
+            291.4460144042969
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Consider a raw input string such as \"<p>Pay €1,249.50 now</p>\"",
+          "bbox": [
+            535.1300048828125,
+            314.5,
+            928.4049682617188,
+            329.5
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Before tokenization or vectorization makes sense, the markup needs to be \nremoved, and the relevant value needs to be identified. A regular expression \ncan remove tags and extract the monetary amount deterministically.",
+          "bbox": [
+            535.1300048828125,
+            352.4200134277344,
+            1028.1700439453125,
+            403.41998291015625
+          ]
+        },
+        {
+          "type": "text",
+          "content": "In Python, this typically looks like searching or substituting patterns using the re \nmodule, long before any model sees the text.",
+          "bbox": [
+            535.1300048828125,
+            426.489990234375,
+            1028.1700439453125,
+            459.489990234375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "This role aligns naturally with the broader pipeline structure used throughout \nthe course, where preprocessing precedes feature extraction and modelling.",
+          "bbox": [
+            535.1300048828125,
+            482.5299987792969,
+            1028.1700439453125,
+            515.530029296875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "104\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page7_img0.png",
+          "width": 212,
+          "height": 238
+        },
+        {
+          "type": "image",
+          "path": "output/images/page7_img1.jpeg",
+          "width": 766,
+          "height": 1024
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 8,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "WHAT PROBLEM REGULAR EXPRESSIONS SOLVE",
+          "bbox": [
+            117.12000274658203,
+            174.21200561523438,
+            584.7980346679688,
+            204.2360076904297
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Regular expressions answer structural questions about text. They tell us \nwhether a string matches a required format, where in the text a pattern \nappears, and which substrings satisfy that pattern.",
+          "bbox": [
+            109.08000183105469,
+            238.81198120117188,
+            602.1254272460938,
+            289.8500061035156
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Take the sentence",
+          "bbox": [
+            109.08000183105469,
+            312.8900146484375,
+            221.92999267578125,
+            327.8900146484375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "\"Contact me.home@ie.edu before 12/03/2026.\"",
+          "bbox": [
+            206.5399932861328,
+            350.80999755859375,
+            501.3050231933594,
+            365.80999755859375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "From a structural perspective, we may want to detect whether an email address \nappears, whether a date appears, and to extract both. A regular expression can \ndetect the email pattern and return the exact substring that matches it. In \nPython, this typically involves a call such as re.search or re.findall, which \nreturns the location and content of the match.",
+          "bbox": [
+            109.08000183105469,
+            388.8800048828125,
+            602.1199951171875,
+            475.8800048828125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "None of this requires understanding what the email refers to or what the date \nmeans. These are pattern-level operations, and that is precisely their scope.",
+          "bbox": [
+            109.08000183105469,
+            498.9019775390625,
+            602.1254272460938,
+            531.9400024414062
+          ]
+        },
+        {
+          "type": "text",
+          "content": "105\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page8_img0.png",
+          "width": 212,
+          "height": 238
+        },
+        {
+          "type": "image",
+          "path": "output/images/page8_img1.jpeg",
+          "width": 796,
+          "height": 1024
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 9,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "WHY REGULAR EXPRESSIONS STILL MATTER",
+          "bbox": [
+            503.1099853515625,
+            97.18997192382812,
+            960.4947509765625,
+            129.22996520996094
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Modern NLP systems rely heavily on transformers, but transformers do not \neliminate the need for structure. They presuppose it.",
+          "bbox": [
+            535.1300048828125,
+            180.55999755859375,
+            1028.1700439453125,
+            213.5659942626953
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Transformers are trained on large volumes of already normalized text. In \npractice, before passing data to such models, we often need to remove \nboilerplate, normalize spacing, discard malformed inputs, or extract fields that \nshould not be treated as free text.",
+          "bbox": [
+            535.1300048828125,
+            236.6199951171875,
+            1028.1700439453125,
+            305.6199951171875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "For example, if a dataset contains log entries, identifiers, or prices embedded in \ntext, it is rarely sensible to let a model infer their structure from scratch. A short \nregular expression applied in Python can enforce consistency and prevent entire \nclasses of errors. In this sense, regular expressions protect the pipeline at its \nboundaries, where reliability and transparency matter most.",
+          "bbox": [
+            535.1300048828125,
+            328.5220031738281,
+            1028.1754150390625,
+            415.57000732421875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "In practice, regular expressions are used to clean text by removing markup and \nnoise, to extract fields such as dates, prices, or identifiers, to normalize \ninconsistent formatting, and to filter out malformed inputs.",
+          "bbox": [
+            535.1300048828125,
+            438.6099853515625,
+            1028.1754150390625,
+            489.6300048828125
+          ]
+        },
+        {
+          "type": "text",
+          "content": "These operations are often invisible when models perform well, but they are \nfoundational. Many failures attributed to models are in fact failures of \npreprocessing.",
+          "bbox": [
+            535.1300048828125,
+            512.6699829101562,
+            1028.1700439453125,
+            563.6699829101562
+          ]
+        },
+        {
+          "type": "text",
+          "content": "106\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page9_img0.png",
+          "width": 212,
+          "height": 238
+        },
+        {
+          "type": "image",
+          "path": "output/images/page9_img1.jpeg",
+          "width": 766,
+          "height": 1024
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 10,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "THE LIMITS OF REGULAR EXPRESSIONS",
+          "bbox": [
+            63.57600021362305,
+            99.0999755859375,
+            530.2471313476562,
+            135.0999755859375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Regular expressions cannot interpret meaning, resolve ambiguity, or capture long-range dependencies. From a regular-expression \nperspective, the word “bank” in “the bank approved the loan” and in “the river bank overflowed” is identical. This limitation motivates the \nintroduction of statistical models and neural representations later in the course.",
+          "bbox": [
+            124.01000213623047,
+            193.92999267578125,
+            1031.6669921875,
+            248.2899932861328
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Regular expressions are not abandoned because they are weak or outdated. They are set aside because the nature of the problem changes.",
+          "bbox": [
+            124.01000213623047,
+            271.57000732421875,
+            1027.761962890625,
+            287.5299987792969
+          ]
+        },
+        {
+          "type": "text",
+          "content": "As long as the task is to detect formats, enforce constraints, or extract explicitly defined patterns, regular expressions are often the best \npossible tool. They are transparent, deterministic, and efficient.",
+          "bbox": [
+            124.01000213623047,
+            310.7099914550781,
+            1031.6669921875,
+            345.8699951171875
+          ]
+        },
+        {
+          "type": "text",
+          "content": "They become inadequate when variation itself becomes meaningful. When two strings differ in wording but express the same intent, or \nwhen the meaning of a word depends on context, explicit rules cease to scale. At that point, learning from data becomes not only \nconvenient but necessary.",
+          "bbox": [
+            124.01000213623047,
+            369.1499938964844,
+            1031.6669921875,
+            423.510009765625
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Regular expressions define what can be solved without uncertainty. Classifiers and transformers are introduced precisely to handle what \nremains once rules have been exhausted.",
+          "bbox": [
+            128.86000061035156,
+            472.0899963378906,
+            1030.2769775390625,
+            507.25
+          ]
+        },
+        {
+          "type": "text",
+          "content": "107\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page10_img0.png",
+          "width": 212,
+          "height": 238
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 11,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "HOW REGULAR EXPRESSIONS SEE TEXT",
+          "bbox": [
+            63.57600021362305,
+            99.0999755859375,
+            524.9527587890625,
+            135.0999755859375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Regular expressions treat text as a sequence of characters. They operate on letters, digits, punctuation, and whitespace, without access to \nwords, syntax, or meaning.",
+          "bbox": [
+            124.01000213623047,
+            193.92999267578125,
+            1031.6669921875,
+            229.0900115966797
+          ]
+        },
+        {
+          "type": "text",
+          "content": "At their core, regular expressions combine a small number of simple mechanisms into expressive patterns.",
+          "bbox": [
+            124.01000213623047,
+            252.3699951171875,
+            815.7669067382812,
+            268.3299865722656
+          ]
+        },
+        {
+          "type": "text",
+          "content": "•\nLiteral characters match themselves, wildcards match any character, and character classes define sets such as uppercase letters or digits. \nQuantifiers specify how many times a pattern may repeat, and anchors restrict where a match may occur within a string.",
+          "bbox": [
+            124.01000213623047,
+            288.9944763183594,
+            1031.6724853515625,
+            326.66998291015625
+          ]
+        },
+        {
+          "type": "text",
+          "content": "•\nAnchors control where patterns apply, and word boundaries prevent partial matches inside longer strings.",
+          "bbox": [
+            124.01000213623047,
+            347.4762268066406,
+            834.2469482421875,
+            365.9100036621094
+          ]
+        },
+        {
+          "type": "text",
+          "content": "•\nGroups allow parts of a pattern to be isolated and reused. Through grouping, regular expressions transform unstructured text into \nstructured data that can be extracted, stored, or processed further.",
+          "bbox": [
+            124.01000213623047,
+            386.7162170410156,
+            1031.6669921875,
+            424.3499755859375
+          ]
+        },
+        {
+          "type": "text",
+          "content": "By default, regular expressions match as much text as possible. This greedy behaviour can lead to unexpected results when delimiters \nrepeat or when multiple matches are possible.",
+          "bbox": [
+            127.68000030517578,
+            470.9419860839844,
+            1029.1124267578125,
+            506.1399841308594
+          ]
+        },
+        {
+          "type": "text",
+          "content": "108\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page11_img0.png",
+          "width": 212,
+          "height": 238
+        }
+      ],
+      "tables": []
+    },
+    {
+      "page_num": 12,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "BASIC PATTERNS",
+          "bbox": [
+            63.57600021362305,
+            67.88202667236328,
+            257.4972839355469,
+            103.90602111816406
+          ]
+        },
+        {
+          "type": "text",
+          "content": "109\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page12_img0.png",
+          "width": 212,
+          "height": 238
+        }
+      ],
+      "tables": [
+        {
+          "page_index": 11,
+          "table_index": 0,
+          "bbox_page_px": [
+            278,
+            300,
+            1994,
+            1225
+          ],
+          "detection_score": 1.0,
+          "column_source": "tatr",
+          "header_strategy": "top_band",
+          "structure_quality": 1.05,
+          "headers": [
+            "col_0",
+            "col_1",
+            "col_2"
+          ],
+          "rows": [
+            [
+              "",
+              "Wildcard, matches any character",
+              "c.t cut, cat, cot matches or"
+            ],
+            [
+              "^abc",
+              "Matches some pattern abc at the start of the string",
+              "^abc abc123 xabc123 matches but not"
+            ],
+            [
+              "abc$",
+              "Matches some pattern abc at the end of the string",
+              "abc$ 123abc 123abcc matches but not"
+            ],
+            [
+              "[abc]",
+              "Matches any of a set of character",
+              "[abc] a, b, c matches or"
+            ],
+            [
+              "[A-Z0-9]",
+              "Matches any of a range of character",
+              "[a-z0-9] k 7 matches or"
+            ],
+            [
+              "ed|ing|s",
+              "Matches one of the specified strings (disjunction)",
+              "ed|ing|s ed, ing, s matches or"
+            ],
+            [
+              "",
+              "Zero or more of previous item (Kleene Closure)",
+              "ab* a, ab, abb, abbb matches"
+            ],
+            [
+              "",
+              "One or more of previous ítem",
+              "ab+ ab, abb, a matches but not"
+            ],
+            [
+              "",
+              "Zero or one of the previous item",
+              "colou?r color colour matches and"
+            ],
+            [
+              "",
+              "Exactly n repeats",
+              "\\d{4} 2025 matches"
+            ],
+            [
+              "",
+              "At least n repeats",
+              "a{2,} aa, aaa, aaaa matches"
+            ],
+            [
+              "",
+              "No more than n repeats",
+              "a{,3} a, aa, aaa matches"
+            ],
+            [
+              "n}",
+              "At least m repeats and no more than n repeats",
+              "a{2,4} aa, aaa, aaaa matches"
+            ],
+            [
+              "a(b|c)+",
+              "Parentheses that indicate the scope of the operators",
+              "(add|ing|s)+ addings, sing, adding matches"
+            ]
+          ],
+          "raw_cells": [
+            [
+              "",
+              "Wildcard, matches any character",
+              "c.t cut, cat, cot matches or"
+            ],
+            [
+              "^abc",
+              "Matches some pattern abc at the start of the string",
+              "^abc abc123 xabc123 matches but not"
+            ],
+            [
+              "abc$",
+              "Matches some pattern abc at the end of the string",
+              "abc$ 123abc 123abcc matches but not"
+            ],
+            [
+              "[abc]",
+              "Matches any of a set of character",
+              "[abc] a, b, c matches or"
+            ],
+            [
+              "[A-Z0-9]",
+              "Matches any of a range of character",
+              "[a-z0-9] k 7 matches or"
+            ],
+            [
+              "ed|ing|s",
+              "Matches one of the specified strings (disjunction)",
+              "ed|ing|s ed, ing, s matches or"
+            ],
+            [
+              "",
+              "Zero or more of previous item (Kleene Closure)",
+              "ab* a, ab, abb, abbb matches"
+            ],
+            [
+              "",
+              "One or more of previous ítem",
+              "ab+ ab, abb, a matches but not"
+            ],
+            [
+              "",
+              "Zero or one of the previous item",
+              "colou?r color colour matches and"
+            ],
+            [
+              "",
+              "Exactly n repeats",
+              "\\d{4} 2025 matches"
+            ],
+            [
+              "",
+              "At least n repeats",
+              "a{2,} aa, aaa, aaaa matches"
+            ],
+            [
+              "",
+              "No more than n repeats",
+              "a{,3} a, aa, aaa matches"
+            ],
+            [
+              "n}",
+              "At least m repeats and no more than n repeats",
+              "a{2,4} aa, aaa, aaaa matches"
+            ],
+            [
+              "a(b|c)+",
+              "Parentheses that indicate the scope of the operators",
+              "(add|ing|s)+ addings, sing, adding matches"
+            ]
+          ],
+          "raw_above_header": [],
+          "page_text_above": "PATTERNS",
+          "page_text_below": "Language Processing",
+          "needs_review": false,
+          "llm_context": "=== TEXT ABOVE TABLE ===\nPATTERNS\n\n=== EXTRACTED HEADERS ===\n['col_0', 'col_1', 'col_2']\n\n=== TEXT BELOW TABLE ===\nLanguage Processing"
+        }
+      ]
+    },
+    {
+      "page_num": 13,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "SPECIAL CHARACTER CLASSES AND ESCAPES",
+          "bbox": [
+            63.57600021362305,
+            60.56201934814453,
+            591.3460693359375,
+            96.58601379394531
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Character classes like \\d, \\w, and \\s are shortcuts for common sets of characters, while their uppercase counterparts (\\D, \\W, \\S) \nrepresent their complements. Some escapes, such as \\b, \\A, and \\Z, do not match characters at all but rather positions in the string. \nUnderstanding the difference between character matches and positional matches is essential for writing correct and predictable regular \nexpressions.",
+          "bbox": [
+            97.63200378417969,
+            149.92532348632812,
+            985.5923461914062,
+            225.5600128173828
+          ]
+        },
+        {
+          "type": "text",
+          "content": "110\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page13_img0.png",
+          "width": 212,
+          "height": 238
+        }
+      ],
+      "tables": [
+        {
+          "page_index": 12,
+          "table_index": 0,
+          "bbox_page_px": [
+            1271,
+            551,
+            2240,
+            1166
+          ],
+          "detection_score": 0.999,
+          "column_source": "tatr",
+          "header_strategy": "top_band",
+          "structure_quality": 1.05,
+          "headers": [
+            "col_0",
+            "col_1",
+            "col_2"
+          ],
+          "rows": [
+            [
+              "\\r",
+              "Carriage return",
+              "Rare, legacy line breaks"
+            ],
+            [
+              "\\b",
+              "Word boundary (position)",
+              "\\bcat\\b cat matches but not"
+            ],
+            [
+              "\\B",
+              "Non–word boundary",
+              "\\Bcat scat matches"
+            ],
+            [
+              "\\A",
+              "Start of the string",
+              "\\Aabc abc... matches"
+            ],
+            [
+              "\\Z",
+              "End of the string",
+              "abc\\Z ...abc matches"
+            ],
+            [
+              "\\\\",
+              "Literal backslash",
+              "\\\\ \\ matches"
+            ],
+            [
+              "\\.",
+              "Literal dot",
+              "\\. . matches"
+            ],
+            [
+              "\\^",
+              "Literal caret",
+              "\\^ ^ matches"
+            ],
+            [
+              "\\$",
+              "Literal dollar sign",
+              "\\$120 $120 matches"
+            ]
+          ],
+          "raw_cells": [
+            [
+              "\\r",
+              "Carriage return",
+              "Rare, legacy line breaks"
+            ],
+            [
+              "\\b",
+              "Word boundary (position)",
+              "\\bcat\\b cat matches but not"
+            ],
+            [
+              "\\B",
+              "Non–word boundary",
+              "\\Bcat scat matches"
+            ],
+            [
+              "\\A",
+              "Start of the string",
+              "\\Aabc abc... matches"
+            ],
+            [
+              "\\Z",
+              "End of the string",
+              "abc\\Z ...abc matches"
+            ],
+            [
+              "\\\\",
+              "Literal backslash",
+              "\\\\ \\ matches"
+            ],
+            [
+              "\\.",
+              "Literal dot",
+              "\\. . matches"
+            ],
+            [
+              "\\^",
+              "Literal caret",
+              "\\^ ^ matches"
+            ],
+            [
+              "\\$",
+              "Literal dollar sign",
+              "\\$120 $120 matches"
+            ]
+          ],
+          "raw_above_header": [],
+          "page_text_above": "",
+          "page_text_below": "",
+          "needs_review": false,
+          "llm_context": "=== EXTRACTED HEADERS ===\n['col_0', 'col_1', 'col_2']"
+        },
+        {
+          "page_index": 12,
+          "table_index": 1,
+          "bbox_page_px": [
+            118,
+            545,
+            1105,
+            1110
+          ],
+          "detection_score": 0.999,
+          "column_source": "tatr",
+          "header_strategy": "top_band",
+          "structure_quality": 1.05,
+          "headers": [
+            "col_0",
+            "col_1",
+            "col_2"
+          ],
+          "rows": [
+            [
+              "\\d",
+              "(0–9) Any digit",
+              "\\d+ 123 matches"
+            ],
+            [
+              "\\D",
+              "Any non-digit",
+              "\\D+ abc matches"
+            ],
+            [
+              "\\w",
+              "Any word character (letters, digits, underscore)",
+              "\\w+ user_42 matches"
+            ],
+            [
+              "\\W",
+              "Any non-word character",
+              "\\W+ @#$ matches"
+            ],
+            [
+              "\\s",
+              "Any whitespace character (space, tab, newline)",
+              "\\s+ matches spaces"
+            ],
+            [
+              "\\S",
+              "Any non-whitespace character",
+              "\\S+ text matches"
+            ],
+            [
+              "\\n",
+              "Newline character",
+              "\\n matches line breaks"
+            ],
+            [
+              "\\t",
+              "Tab character",
+              "\\t matches tabs"
+            ]
+          ],
+          "raw_cells": [
+            [
+              "\\d",
+              "(0–9) Any digit",
+              "\\d+ 123 matches"
+            ],
+            [
+              "\\D",
+              "Any non-digit",
+              "\\D+ abc matches"
+            ],
+            [
+              "\\w",
+              "Any word character (letters, digits, underscore)",
+              "\\w+ user_42 matches"
+            ],
+            [
+              "\\W",
+              "Any non-word character",
+              "\\W+ @#$ matches"
+            ],
+            [
+              "\\s",
+              "Any whitespace character (space, tab, newline)",
+              "\\s+ matches spaces"
+            ],
+            [
+              "\\S",
+              "Any non-whitespace character",
+              "\\S+ text matches"
+            ],
+            [
+              "\\n",
+              "Newline character",
+              "\\n matches line breaks"
+            ],
+            [
+              "\\t",
+              "Tab character",
+              "\\t matches tabs"
+            ]
+          ],
+          "raw_above_header": [],
+          "page_text_above": "expressions.",
+          "page_text_below": "",
+          "needs_review": false,
+          "llm_context": "=== TEXT ABOVE TABLE ===\nexpressions.\n\n=== EXTRACTED HEADERS ===\n['col_0', 'col_1', 'col_2']"
+        }
+      ]
+    },
+    {
+      "page_num": 14,
+      "text_blocks": [
+        {
+          "type": "text",
+          "content": "LOOKAROUNDS",
+          "bbox": [
+            63.57600021362305,
+            67.88202667236328,
+            247.51406860351562,
+            103.90602111816406
+          ]
+        },
+        {
+          "type": "text",
+          "content": "Lookarounds are a special class of regular expression constructs that allow a pattern to test its immediate context without actually \nconsuming any characters. Instead of matching text, they match positions in the string. This makes them particularly useful when we \nwant to enforce local constraints on what may appear before or after a match, while keeping the extracted substring clean and \nunchanged.",
+          "bbox": [
+            108.0,
+            142.17999267578125,
+            1000.4269409179688,
+            215.74000549316406
+          ]
+        },
+        {
+          "type": "text",
+          "content": "For example, a lookahead can ensure that a number is followed by a percentage sign without including the sign in the match, and a \nlookbehind can ensure that a number is preceded by a currency symbol without capturing that symbol. Because lookarounds do not \nadvance the matching cursor, they are best understood as contextual tests rather than matching operations, and they are often used in \nNLP preprocessing when precise extraction is needed without altering surrounding text.",
+          "bbox": [
+            108.0,
+            239.00198364257812,
+            1000.432373046875,
+            312.6099853515625
+          ]
+        },
+        {
+          "type": "text",
+          "content": "111\nAI: Natural Language Processing",
+          "bbox": [
+            29.591999053955078,
+            611.9760131835938,
+            1122.480712890625,
+            626.3759765625
+          ]
+        }
+      ],
+      "images": [
+        {
+          "type": "image",
+          "path": "output/images/page14_img0.png",
+          "width": 212,
+          "height": 238
+        }
+      ],
+      "tables": [
+        {
+          "page_index": 13,
+          "table_index": 0,
+          "bbox_page_px": [
+            233,
+            742,
+            1925,
+            1165
+          ],
+          "detection_score": 1.0,
+          "column_source": "tatr",
+          "header_strategy": "top_band",
+          "structure_quality": 1.05,
+          "headers": [
+            "col_0",
+            "col_1",
+            "col_2"
+          ],
+          "rows": [
+            [
+              "(?=...)",
+              "Positive lookahead",
+              "\\d(?=%) 5 5% matches in"
+            ],
+            [
+              "(?!...)",
+              "Negative lookahead",
+              "a(?!n) a apple matches in but not in"
+            ],
+            [
+              "(?<=...)",
+              "Positive lookbehind",
+              "(?<=\\$)\\d+ 120 $120 matches in"
+            ],
+            [
+              "(?<!...)",
+              "Negative lookbehind",
+              "(?<!-)cat cat -cat matches but not"
+            ]
+          ],
+          "raw_cells": [
+            [
+              "(?=...)",
+              "Positive lookahead",
+              "\\d(?=%) 5 5% matches in"
+            ],
+            [
+              "(?!...)",
+              "Negative lookahead",
+              "a(?!n) a apple matches in but not in"
+            ],
+            [
+              "(?<=...)",
+              "Positive lookbehind",
+              "(?<=\\$)\\d+ 120 $120 matches in"
+            ],
+            [
+              "(?<!...)",
+              "Negative lookbehind",
+              "(?<!-)cat cat -cat matches but not"
+            ]
+          ],
+          "raw_above_header": [],
+          "page_text_above": "NLP preprocessing when precise extraction is needed without altering surrounding text.",
+          "page_text_below": "",
+          "needs_review": false,
+          "llm_context": "=== TEXT ABOVE TABLE ===\nNLP preprocessing when precise extraction is needed without altering surrounding text.\n\n=== EXTRACTED HEADERS ===\n['col_0', 'col_1', 'col_2']"
+        }
+      ]
+    }
+  ]
+}
