@@ -241,7 +241,7 @@ export default function App() {
               disabled={isRunDisabled}
               className="w-full rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {status === 'running' ? 'Running…' : 'Run Simulation'}
+              {status === 'running' ? 'Running…' : 'Execute'}
             </button>
             {hasLengthMismatch && (
               <p className="mt-1.5 text-xs text-red-600">
