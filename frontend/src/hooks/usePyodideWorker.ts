@@ -23,6 +23,8 @@ export interface UsePyodideWorkerResult {
   error: string | null
   run: (input: SimulationInput) => void
   retry: () => void
+  /** True when the worker errored before ever reaching 'ready' (init failure). */
+  isInitError: boolean
 }
 
 const LOAD_TIMEOUT_MS = 30_000
@@ -34,11 +36,14 @@ export function usePyodideWorker(): UsePyodideWorkerResult {
   const [error, setError] = useState<string | null>(null)
   // Incrementing epoch terminates the old worker and re-initialises a new one.
   const [epoch, setEpoch] = useState(0)
+  // Tracks whether the worker has ever sent 'ready' in the current epoch.
+  const hasBeenReady = useRef(false)
 
   useEffect(() => {
     setStatus('loading')
     setOutput(null)
     setError(null)
+    hasBeenReady.current = false
 
     const worker = new Worker(
       new URL('../workers/pyodide.worker.ts', import.meta.url),
@@ -55,6 +60,7 @@ export function usePyodideWorker(): UsePyodideWorkerResult {
       const msg = event.data
       if (msg.type === 'ready') {
         clearTimeout(timeoutId)
+        hasBeenReady.current = true
         setStatus('ready')
       } else if (msg.type === 'result') {
         setOutput(msg.payload)
@@ -93,5 +99,7 @@ export function usePyodideWorker(): UsePyodideWorkerResult {
     setEpoch((e) => e + 1)
   }, [])
 
-  return { status, output, error, run, retry }
+  const isInitError = status === 'error' && !hasBeenReady.current
+
+  return { status, output, error, run, retry, isInitError }
 }

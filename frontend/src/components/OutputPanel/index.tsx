@@ -5,6 +5,7 @@
  * Handles five states: loading, running, empty, error, and result.
  */
 
+import { useState } from 'react'
 import type { FC } from 'react'
 import type { SimulationOutput } from '../../types'
 import type { WorkerStatus } from '../../hooks/usePyodideWorker'
@@ -14,6 +15,37 @@ interface OutputPanelProps {
   output: SimulationOutput | null
   error: string | null
   onRuleClick?: (ruleName: string) => void
+}
+
+const TRACEBACK_PREAMBLE = 'Traceback (most recent call last):'
+
+function extractFinalLine(error: string): string {
+  const lines = error.trim().split('\n').filter((l) => l.trim())
+  return lines[lines.length - 1] ?? error
+}
+
+function ErrorDisplay({ error }: { error: string }) {
+  const [showDetails, setShowDetails] = useState(false)
+  const hasTraceback = error.trimStart().startsWith(TRACEBACK_PREAMBLE)
+  const summary = hasTraceback ? extractFinalLine(error) : error
+
+  return (
+    <div className="p-3">
+      <p className="text-xs font-medium text-red-600">Error</p>
+      <pre className="mt-1 rounded bg-red-50 p-2 text-xs text-red-700 whitespace-pre-wrap">
+        {showDetails ? error : summary}
+      </pre>
+      {hasTraceback && (
+        <button
+          type="button"
+          onClick={() => setShowDetails((v) => !v)}
+          className="mt-1 text-xs text-red-500 underline hover:text-red-700"
+        >
+          {showDetails ? 'Hide details' : 'Show details'}
+        </button>
+      )}
+    </div>
+  )
 }
 
 function Spinner() {
@@ -86,12 +118,7 @@ const OutputPanel: FC<OutputPanelProps> = ({ status, output, error, onRuleClick 
   }
 
   if (error) {
-    return (
-      <div className="p-3">
-        <p className="text-xs font-medium text-red-600">Error</p>
-        <pre className="mt-1 rounded bg-red-50 p-2 text-xs text-red-700 whitespace-pre-wrap">{error}</pre>
-      </div>
-    )
+    return <ErrorDisplay error={error} />
   }
 
   if (!output) {

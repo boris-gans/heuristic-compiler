@@ -54,6 +54,11 @@ const FeatureControls: FC<FeatureControlsProps> = ({ rulesJson, input, onChange 
           }
           placeholder="e.g. myshop.com"
         />
+        {(input.features['shop'] as string) === '' && (
+          <span className="text-xs text-amber-600">
+            &#9888; Rules with scope will be skipped.
+          </span>
+        )}
       </div>
 
       {/* Dynamic feature inputs derived from the rules JSON */}
@@ -127,6 +132,11 @@ const FeatureControls: FC<FeatureControlsProps> = ({ rulesJson, input, onChange 
               }}
               placeholder="paypal, card, klarna"
             />
+            {input.labels.length === 0 && (
+              <span className="text-xs text-blue-600">
+                &#9432; No labels provided — heuristic rules may add labels from scratch via override.
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col gap-1">
