@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import RuleEditor from './components/RuleEditor'
 import type { RuleEditorHandle } from './components/RuleEditor'
 import FeatureControls from './components/FeatureControls'
@@ -56,7 +56,7 @@ function writeSplitRatio(ratio: number): void {
 
 export default function App() {
   const [input, setInput] = useState<SimulationInput>(DEFAULT_INPUT)
-  const { status, output, error, run } = usePyodideWorker()
+  const { status, output, error, run, retry, isInitError } = usePyodideWorker()
   const ruleEditorRef = useRef<RuleEditorHandle>(null)
 
   // Split ratio state, persisted in localStorage
@@ -117,7 +117,24 @@ export default function App() {
     }
   }, [])
 
-  const isRunDisabled = status === 'loading' || status === 'running'
+  const isJsonValid = useMemo(() => {
+    try {
+      JSON.parse(input.rulesJson)
+      return true
+    } catch {
+      return false
+    }
+  }, [input.rulesJson])
+
+  // Block run when labels are non-empty but probs count doesn't match.
+  // Empty labels is allowed (case f): the engine can build them from scratch.
+  const hasLengthMismatch =
+    input.probabilitiesNeeded &&
+    input.labels.length > 0 &&
+    input.probs.length !== input.labels.length
+
+  const isRunDisabled =
+    status === 'loading' || status === 'running' || !isJsonValid || hasLengthMismatch
 
   return (
     <div className="flex h-full flex-col bg-white">
@@ -158,6 +175,13 @@ export default function App() {
               onChange={(rulesJson) => setInput((prev) => ({ ...prev, rulesJson }))}
               appliedRules={output?.appliedRules}
             />
+            {!isJsonValid && (
+              <div className="shrink-0 border-t border-red-200 bg-red-50 px-3 py-2">
+                <span className="text-xs text-red-600">
+                  Invalid JSON — fix errors before running.
+                </span>
+              </div>
+            )}
           </div>
         )}
 
@@ -182,6 +206,22 @@ export default function App() {
 
         {/* Right panel — Controls + Output */}
         <div className="flex min-h-0 flex-1 flex-col">
+          {/* Pyodide init-failure banner */}
+          {isInitError && (
+            <div className="shrink-0 flex items-center gap-2 border-b border-red-200 bg-red-50 px-3 py-2">
+              <span className="flex-1 text-xs text-red-700">
+                Could not load the Python runtime.
+              </span>
+              <button
+                type="button"
+                onClick={retry}
+                className="rounded border border-red-300 bg-white px-2 py-0.5 text-xs text-red-700 hover:bg-red-50"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
           {/* Feature controls (scrollable) */}
           <div className="flex-1 overflow-y-auto border-b border-gray-200">
             <div className="border-b border-gray-200 bg-gray-50 px-3 py-2">
@@ -203,6 +243,11 @@ export default function App() {
             >
               {status === 'running' ? 'Running…' : 'Run Simulation'}
             </button>
+            {hasLengthMismatch && (
+              <p className="mt-1.5 text-xs text-red-600">
+                Labels and probabilities must have the same number of entries.
+              </p>
+            )}
           </div>
 
           {/* Output panel (scrollable) */}
@@ -213,7 +258,7 @@ export default function App() {
             <OutputPanel
               status={status}
               output={output}
-              error={error}
+              error={isInitError ? null : error}
               onRuleClick={handleRuleClick}
             />
           </div>
