@@ -1,68 +1,84 @@
 # Project Context
 
 ## Goal
-Research and prototype a hybrid PDF extraction pipeline for professor lecture slides (mixed text, formulas, tables, images). Intended output: structured per-page blocks `{type, content/path, bbox}` suitable for note generation — ideally text + LaTeX for formulas, with extracted images for future VLM alt-text.
+
+Build a **client-side heuristic rule simulator and debugger** so non-technical colleagues
+can paste a rules JSON, tweak feature inputs, click "Run", and immediately see which rules
+fired, in what order, and why — without any backend or deployment.
 
 ## Repo layout
+
 ```
-pdf-extraction/
-  documents/          # input PDFs (3 slide decks)
-  output/             # gitignored; generated images, renders, JSON outputs
+heuristic-compiler/
+  heuristic_layer.py          # Python engine — the class being simulated
+  frontend/                   # React + Vite app (client-side only)
+    public/
+      heuristic_layer.py      # copy of root file; served as static asset for Pyodide
+    src/
+      types/index.ts          # SimulationInput, SimulationOutput, WorkerMessage types
+      workers/
+        pyodide.worker.ts     # Web Worker: loads Pyodide + heuristic_layer.py
+      hooks/
+        usePyodideWorker.ts   # React hook wrapping the worker lifecycle
+      components/
+        RuleEditor/           # Monaco-based JSON editor (Issue #2)
+        FeatureControls/      # Dynamic feature form (Issues #3, #4)
+        OutputPanel/          # Results display (Issue #6)
+      App.tsx                 # Two-panel layout shell
+    package.json
+    vite.config.ts
   docs/
-    context.md        # research notes on PDF extraction methods (from paper)
-    tatr-pipeline.md  # TATR improvement notes: box padding + column fallback
-  parse.ipynb         # main comparison notebook (expanded, 9+ experiments)
-  tatr.ipynb          # dedicated TATR table detection notebook
-pyproject.toml
-.venv/                # Python 3.11 venv managed by uv
+    overview.md               # UI/UX architecture and design spec
+    heuristic_layer_integration.md  # Production integration guide (rules format ref)
+  pyproject.toml              # Python dev tooling (ruff, mypy, pytest)
 ```
 
-## Input documents
-| File | Size |
-|------|------|
-| Session 06 - Regular Expressions.pdf | 1.35 MB |
-| Session 07 - Information Retrieval.pdf | 1.71 MB |
-| Session 09 - Naive Bayes.pdf | 2.56 MB — primary test document |
+## Key architectural decisions
 
-## Notebook experiments (`parse.ipynb`)
-| # | Experiment | Status |
-|---|-----------|--------|
-| 0 | Setup — imports, paths, output dirs | ✓ |
-| 1 | Baseline text: PyMuPDF vs pdfplumber | ✓ |
-| 2 | Layout block inspection + bbox visualization | ✓ |
-| 3 | Table extraction: pdfplumber + PyMuPDF `find_tables()` | ✓ (both found nothing — no bordered tables) |
-| 4 | Image extraction (raster + full-page renders) | ✓ |
-| 5 | Hybrid pipeline MVP → `naive_bayes_extracted.json` | ✓ |
-| 6 | TATR table detection + structure recognition | ✓ (moved to `tatr.ipynb`) |
-| 7 | Side-by-side table comparison | ✓ |
-| 8 | Nougat formula/text extraction | **blocked** (optional dep, not installed by default) |
-| 9 | Side-by-side text/formula comparison: PyMuPDF vs Nougat | blocked |
+- **Pyodide in a Web Worker**: Python runs in-browser via WebAssembly; isolated in a
+  worker to avoid blocking the UI. SharedArrayBuffer requires COOP/COEP headers.
+- **`heuristic_layer.py` as static asset**: the private `ml_training_utils` package
+  can't be installed via SSH in Pyodide; the source file is bundled directly and
+  `exec()`'d into the Pyodide namespace at runtime.
+- **Feature form derived from rules JSON**: instead of a fixed form, the UI parses the
+  rules JSON and surfaces only the features referenced in conditions.
+- **Rule → line mapping**: after a run, Monaco decorations highlight the rules that fired;
+  requires a JS-side parse to map rule names to line numbers.
 
-## Dependencies (pyproject.toml, Python 3.11)
-Core: `pymupdf`, `pdfplumber`, `pillow`, `pytesseract`, `pydantic>=2.0`, `torch>=2.0`, `torchvision`, `transformers>=4.30`, `timm>=1.0`, `matplotlib`, `pandas`
+## Rules JSON format (key reference)
 
-Optional (`[nougat]`): `nougat-ocr>=0.1.17` — **not installed by default**, kept separate due to env conflicts.
-
-## Known issues / blockers
-**Nougat** remains incompatible with the current env (transformers 5.x + albumentations API changes). Isolated as optional dep to avoid breaking TATR.
-
-## Architecture decisions
-- **Rule-based parsers (PyMuPDF, pdfplumber)** work well for plain text but fail on borderless tables
-- **TATR** (`tatr.ipynb`) is the primary table approach — operates on rendered page images (150 DPI)
-- **Hybrid pipeline** (`extract_page_full` + `run_hybrid_pipeline` in `tatr.ipynb`): combines TATR tables + PyMuPDF text blocks + PyMuPDF image extraction per page; outputs `<stem>_hybrid.json`
-- **Column fallback chain** (implemented): `"tatr"` → `"external_header"` (text above box) → `"body_text_cluster"` (x-distribution of body words) → `"generic"`
-- **Box repair** (implemented): `pad_box_sides` (pad_bottom=36) + `extend_table_box_down_using_words` to capture rows TATR crops short
-- **LLM postprocessing hook**: every table dict in JSON output has `needs_review: bool` and `llm_context: str` (text above/below + detected headers) for downstream LLM cleaning
-- **Formulas**: garbled by all rule-based tools; Nougat (blocked) would output LaTeX
-- **Images**: raster via `page.get_images()`; vector graphics via full-page render fallback
-- VLM alt-text generation deferred to Phase 2
-
-## Key output schema (hybrid JSON)
 ```json
-{ "source": "...", "pages": [{ "page_num": N, "text_blocks": [...], "images": [...],
-  "tables": [{ "headers", "rows", "column_source", "structure_quality", "needs_review", "llm_context", ... }] }] }
+{
+  "name": "rule_name",
+  "scope": "all",
+  "antecedent": { "logic": "all", "conditions": [{ "field": "amount", "operator": ">=", "value": 500 }] },
+  "consequent": { "action": "override", "value": "card" },
+  "break": false
+}
 ```
 
-## Open questions
-- Tune fallback thresholds (`pad_bottom`, `line_gap`, `up` for header band) against the slide decks
-- Once Nougat env is fixed: how well does it handle slide-deck format vs academic papers?
+Operators: `override` (priority 3) > `adjust` (2) > `ban` (4) > `append` (1, no-probs only).
+
+## Worker message protocol
+
+```
+Main → Worker:  { type: "run", payload: SimulationInput }
+Worker → Main:  { type: "ready" }
+                { type: "result", payload: SimulationOutput }
+                { type: "error", message: string }
+```
+
+## Open issues (GitHub)
+
+| # | Title |
+|---|-------|
+| 1 | Pyodide Worker: initialise and run HeuristicLayer |
+| 2 | Monaco Editor: JSON editing with rule-format schema |
+| 3 | Feature extraction: derive feature list from rules JSON |
+| 4 | Feature Controls panel: dynamic form |
+| 5 | Simulation wiring: usePyodideWorker hook |
+| 6 | Output Panel: display labels, probabilities, and applied rules |
+| 7 | Monaco rule highlighting: scroll to triggered rules |
+| 8 | Layout, CSS, and responsive polish |
+| 9 | Build pipeline: COOP/COEP headers and Pyodide asset handling |
+| 10 | Error handling and edge cases |
