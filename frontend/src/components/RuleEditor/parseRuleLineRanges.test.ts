@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseRuleLineRanges } from './parseRuleLineRanges'
+import { parseRuleLineRanges, parseRuleFullRanges } from './parseRuleLineRanges'
 
 // prettier-ignore
 const THREE_RULE_JSON = `[
@@ -84,5 +84,49 @@ describe('parseRuleLineRanges', () => {
 ]`
     const ranges = parseRuleLineRanges(json)
     expect(ranges.get('deep_rule')).toBe(2)
+  })
+})
+
+describe('parseRuleFullRanges', () => {
+  it('returns correct start and end lines for a 3-rule array', () => {
+    const ranges = parseRuleFullRanges(THREE_RULE_JSON)
+    expect(ranges.size).toBe(3)
+
+    const first = ranges.get('force_card_high_value')
+    expect(first?.start).toBe(2)
+    expect(first?.end).toBe(7)
+
+    const second = ranges.get('ban_paypal_de')
+    expect(second?.start).toBe(8)
+    expect(second?.end).toBe(13)
+
+    const third = ranges.get('adjust_klarna')
+    expect(third?.start).toBe(14)
+    expect(third?.end).toBe(19)
+  })
+
+  it('returns an empty map for invalid JSON', () => {
+    expect(parseRuleFullRanges('not valid json')).toEqual(new Map())
+  })
+
+  it('returns an empty map when JSON is not an array', () => {
+    const single = JSON.stringify({
+      name: 'single_rule',
+      scope: 'all',
+      antecedent: { logic: 'all', conditions: [] },
+      consequent: { action: 'ban', value: 'paypal' },
+    })
+    expect(parseRuleFullRanges(single)).toEqual(new Map())
+  })
+
+  it('returns an empty map for an empty array', () => {
+    expect(parseRuleFullRanges('[]')).toEqual(new Map())
+  })
+
+  it('end line is always >= start line', () => {
+    const ranges = parseRuleFullRanges(THREE_RULE_JSON)
+    for (const { start, end } of ranges.values()) {
+      expect(end).toBeGreaterThanOrEqual(start)
+    }
   })
 })

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import RuleEditor from './components/RuleEditor'
+import type { RuleEditorHandle } from './components/RuleEditor'
 import FeatureControls from './components/FeatureControls'
 import OutputPanel from './components/OutputPanel'
 import { usePyodideWorker } from './hooks/usePyodideWorker'
@@ -33,10 +34,19 @@ const DEFAULT_INPUT: SimulationInput = {
 export default function App() {
   const [input, setInput] = useState<SimulationInput>(DEFAULT_INPUT)
   const { status, output, error, run } = usePyodideWorker()
+  const ruleEditorRef = useRef<RuleEditorHandle>(null)
 
   const handleRunClick = () => {
     run({ ...input, rulesJson: input.rulesJson })
   }
+
+  const handleRuleClick = useCallback((ruleName: string) => {
+    const lineRanges = ruleEditorRef.current?.getRuleLineRanges()
+    const line = lineRanges?.get(ruleName)
+    if (line !== undefined) {
+      ruleEditorRef.current?.revealLine(line)
+    }
+  }, [])
 
   const isRunDisabled = status === 'loading' || status === 'running'
 
@@ -56,8 +66,10 @@ export default function App() {
         {/* TODO (Issue #8): add drag-to-resize handle between panels */}
         <div className="flex w-1/2 flex-col border-r border-gray-200">
           <RuleEditor
+            ref={ruleEditorRef}
             value={input.rulesJson}
             onChange={(rulesJson) => setInput((prev) => ({ ...prev, rulesJson }))}
+            appliedRules={output?.appliedRules}
           />
         </div>
 
@@ -91,7 +103,12 @@ export default function App() {
             <div className="border-b border-gray-200 bg-gray-50 px-3 py-2">
               <span className="text-sm font-medium text-gray-600">Output</span>
             </div>
-            <OutputPanel status={status} output={output} error={error} />
+            <OutputPanel
+              status={status}
+              output={output}
+              error={error}
+              onRuleClick={handleRuleClick}
+            />
           </div>
         </div>
       </div>

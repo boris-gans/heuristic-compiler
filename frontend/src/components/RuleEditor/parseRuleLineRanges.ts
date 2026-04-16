@@ -1,3 +1,88 @@
+/** Start and end line numbers (1-indexed) of a rule block in the editor. */
+export interface RuleRange {
+  /** Line where the rule object opens (`{`). */
+  start: number
+  /** Line where the rule object closes (`}`). */
+  end: number
+}
+
+/**
+ * Parses a JSON rules array text and returns a map of rule name → { start, end }
+ * line numbers (1-indexed, matching Monaco's convention).
+ */
+export function parseRuleFullRanges(text: string): Map<string, RuleRange> {
+  const map = new Map<string, RuleRange>()
+
+  let rules: unknown[]
+  try {
+    rules = JSON.parse(text)
+  } catch {
+    return map
+  }
+
+  if (!Array.isArray(rules)) return map
+
+  const lines = text.split('\n')
+  let depth = 0
+  let ruleStartLine = -1
+  let ruleIndex = 0
+  let inString = false
+  let escape = false
+
+  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    const line = lines[lineIdx]!
+    for (let charIdx = 0; charIdx < line.length; charIdx++) {
+      const ch = line[charIdx]!
+
+      if (escape) {
+        escape = false
+        continue
+      }
+
+      if (inString) {
+        if (ch === '\\') {
+          escape = true
+        } else if (ch === '"') {
+          inString = false
+        }
+        continue
+      }
+
+      if (ch === '"') {
+        inString = true
+        continue
+      }
+
+      if (ch === '[' || ch === '{') {
+        depth++
+        if (depth === 2 && ch === '{') {
+          ruleStartLine = lineIdx + 1 // 1-indexed
+        }
+      } else if (ch === ']' || ch === '}') {
+        if (depth === 2 && ch === '}' && ruleStartLine !== -1) {
+          const rule = rules[ruleIndex]
+          if (
+            rule !== null &&
+            typeof rule === 'object' &&
+            'name' in rule &&
+            typeof (rule as Record<string, unknown>).name === 'string'
+          ) {
+            map.set((rule as Record<string, unknown>).name as string, {
+              start: ruleStartLine,
+              end: lineIdx + 1,
+            })
+          }
+          ruleIndex++
+          ruleStartLine = -1
+        }
+        depth--
+      }
+    }
+  }
+
+  return map
+}
+
 /**
  * Parses a JSON rules array text and returns a map of rule name -> start line number.
  * Line numbers are 1-indexed (matching Monaco's convention).
