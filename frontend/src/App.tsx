@@ -11,6 +11,8 @@ const DEFAULT_SPLIT = 0.5
 const MIN_SPLIT = 0.2
 const MAX_SPLIT = 0.8
 
+const RULES_KEY = 'heuristic-rules-json'
+
 const DEFAULT_RULES = `[
   {
     "name": "example_rule",
@@ -30,12 +32,34 @@ const DEFAULT_RULES = `[
   }
 ]`
 
-const DEFAULT_INPUT: SimulationInput = {
-  rulesJson: DEFAULT_RULES,
-  features: { shop: '' },
-  labels: ['paypal', 'creditcard', 'klarna'],
-  probs: [0.5, 0.3, 0.2],
-  probabilitiesNeeded: true,
+function makeDefaultInput(rulesJson: string): SimulationInput {
+  return {
+    rulesJson,
+    features: { shop: '' },
+    labels: ['paypal', 'creditcard', 'klarna'],
+    probs: [0.5, 0.3, 0.2],
+    probabilitiesNeeded: true,
+  }
+}
+
+function readRulesJson(): string {
+  try {
+    const saved = localStorage.getItem(RULES_KEY)
+    // Treat null (never set) and empty string (user cleared the editor) the same:
+    // null  → first visit, show default
+    // ''    → user explicitly blanked the editor, keep it blank
+    return saved ?? DEFAULT_RULES
+  } catch {
+    return DEFAULT_RULES
+  }
+}
+
+function writeRulesJson(value: string): void {
+  try {
+    localStorage.setItem(RULES_KEY, value)
+  } catch {
+    // localStorage unavailable; ignore
+  }
 }
 
 function readSplitRatio(): number {
@@ -57,7 +81,7 @@ function writeSplitRatio(ratio: number): void {
 }
 
 export default function App() {
-  const [input, setInput] = useState<SimulationInput>(DEFAULT_INPUT)
+  const [input, setInput] = useState<SimulationInput>(() => makeDefaultInput(readRulesJson()))
   const { status, output, error, run, retry, isInitError } = usePyodideWorker()
   const ruleEditorRef = useRef<RuleEditorHandle>(null)
 
@@ -174,7 +198,10 @@ export default function App() {
             <RuleEditor
               ref={ruleEditorRef}
               value={input.rulesJson}
-              onChange={(rulesJson) => setInput((prev) => ({ ...prev, rulesJson }))}
+              onChange={(rulesJson) => {
+                writeRulesJson(rulesJson)
+                setInput((prev) => ({ ...prev, rulesJson }))
+              }}
               appliedRules={output?.appliedRules}
             />
             {!isJsonValid && (
