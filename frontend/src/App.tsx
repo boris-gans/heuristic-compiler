@@ -21,10 +21,12 @@ const DEFAULT_RULES = `[
         { "field": "amount", "operator": ">=", "value": 500 }
       ]
     },
-    "consequent": {
-      "action": "override",
-      "value": "creditcard"
-    }
+    "consequent": [
+      {
+        "action": "override",
+        "value": "creditcard"
+      }
+    ]
   }
 ]`
 

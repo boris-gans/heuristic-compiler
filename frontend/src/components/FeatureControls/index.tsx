@@ -114,7 +114,7 @@ const FeatureControls: FC<FeatureControlsProps> = ({ rulesJson, input, onChange 
           checked={input.probabilitiesNeeded}
           onChange={(e) => onChange({ ...input, probabilitiesNeeded: e.target.checked })}
         />
-        <span className="text-gray-700">probabilities_needed</span>
+        <span className="text-gray-700">Model Output</span>
       </label>
 
       {/* labels and probs — only visible when probabilitiesNeeded is true */}

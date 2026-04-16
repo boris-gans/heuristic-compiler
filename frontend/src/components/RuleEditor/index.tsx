@@ -7,7 +7,14 @@
  * getRuleLineRanges() via an imperative ref for Issue #7 (rule highlighting).
  */
 
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import Editor from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
 import { parseRuleLineRanges, parseRuleFullRanges } from './parseRuleLineRanges'
@@ -38,13 +45,13 @@ const RULES_SCHEMA = {
         },
         antecedent: {
           type: 'object',
-          required: ['logic', 'conditions'],
+          required: ['conditions'],
           additionalProperties: false,
           properties: {
             logic: {
               type: 'string',
               enum: ['all', 'any'],
-              description: '"all" = AND logic, "any" = OR logic.',
+              description: '"all" = AND logic, "any" = OR logic. Defaults to "all" when omitted.',
             },
             conditions: {
               type: 'array',
@@ -83,21 +90,24 @@ const RULES_SCHEMA = {
           },
         },
         consequent: {
-          type: 'object',
-          required: ['action', 'value'],
-          additionalProperties: false,
-          properties: {
-            action: {
-              type: 'string',
-              enum: ['override', 'adjust', 'ban', 'append'],
-              description: 'Action to apply when the rule fires.',
-            },
-            value: {
-              description: 'Target label or list of labels.',
-            },
-            scaling_factor: {
-              type: 'number',
-              description: 'Probability multiplier. Required for "adjust" action.',
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['action', 'value'],
+            additionalProperties: false,
+            properties: {
+              action: {
+                type: 'string',
+                enum: ['override', 'adjust', 'ban', 'append'],
+                description: 'Action to apply when the rule fires.',
+              },
+              value: {
+                description: 'Target label or list of labels.',
+              },
+              scaling_factor: {
+                type: 'number',
+                description: 'Probability multiplier. Required for "adjust" action.',
+              },
             },
           },
         },
@@ -132,11 +142,84 @@ const RuleEditor = forwardRef<RuleEditorHandle, RuleEditorProps>(
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
     const decorationCollectionRef = useRef<editor.IEditorDecorationsCollection | null>(null)
     const [editorReady, setEditorReady] = useState(false)
+    const [isDragOver, setIsDragOver] = useState(false)
+    const [importError, setImportError] = useState<string | null>(null)
+    const fileInputRef = useRef<HTMLInputElement | null>(null)
     // Stable ref so we don't need onDecorationsReady in effect deps
     const onDecorationsReadyRef = useRef(onDecorationsReady)
     useEffect(() => {
       onDecorationsReadyRef.current = onDecorationsReady
     })
+
+    const loadJsonFile = useCallback(
+      (file: File) => {
+        if (!file.name.endsWith('.json') && file.type !== 'application/json') {
+          setImportError('Only .json files are supported.')
+          return
+        }
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const text = e.target?.result
+          if (typeof text !== 'string') return
+          try {
+            JSON.parse(text) // validate before loading
+            onChange(text)
+            setImportError(null)
+          } catch {
+            setImportError('Invalid JSON — file could not be parsed.')
+          }
+        }
+        reader.readAsText(file)
+      },
+      [onChange],
+    )
+
+    const handleImportClick = () => {
+      fileInputRef.current?.click()
+    }
+
+    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (file) loadJsonFile(file)
+      // Reset so the same file can be re-imported if needed
+      e.target.value = ''
+    }
+
+    const handleExport = () => {
+      try {
+        const parsed = JSON.parse(value)
+        const pretty = JSON.stringify(parsed, null, 2)
+        const blob = new Blob([pretty], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'rules.json'
+        a.click()
+        URL.revokeObjectURL(url)
+      } catch {
+        // value is invalid JSON — shouldn't be reachable (Run is gated), but guard anyway
+      }
+    }
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setIsDragOver(true)
+    }
+
+    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+      // Only clear when the pointer actually leaves the container
+      if (e.currentTarget.contains(e.relatedTarget as Node | null)) return
+      setIsDragOver(false)
+    }
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setIsDragOver(false)
+      const file = e.dataTransfer.files[0]
+      if (file) loadJsonFile(file)
+    }
 
     const handleEditorMount = useCallback(
       (
@@ -231,10 +314,58 @@ const RuleEditor = forwardRef<RuleEditorHandle, RuleEditorProps>(
 
     return (
       <div className="flex h-full flex-col">
-        <div className="flex items-center border-b border-gray-200 bg-gray-50 px-3 py-2">
+        {/* Header row */}
+        <div className="flex items-center gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2">
           <span className="text-sm font-medium text-gray-600">Rules JSON</span>
+          <div className="ml-auto flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={handleImportClick}
+              className="rounded border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-100"
+            >
+              Import
+            </button>
+            <button
+              type="button"
+              onClick={handleExport}
+              className="rounded border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-100"
+            >
+              Export
+            </button>
+          </div>
         </div>
-        <div className="min-h-0 flex-1">
+
+        {/* Hidden file input — JSON only */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json,application/json"
+          className="hidden"
+          onChange={handleFileInputChange}
+        />
+
+        {/* Import error banner */}
+        {importError && (
+          <div className="flex shrink-0 items-center justify-between border-b border-red-200 bg-red-50 px-3 py-1.5">
+            <span className="text-xs text-red-600">{importError}</span>
+            <button
+              type="button"
+              onClick={() => setImportError(null)}
+              className="ml-2 text-xs text-red-400 hover:text-red-600"
+              aria-label="Dismiss"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        {/* Editor + drag-drop overlay */}
+        <div
+          className="relative min-h-0 flex-1"
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
           <Editor
             height="100%"
             language="json"
@@ -249,6 +380,27 @@ const RuleEditor = forwardRef<RuleEditorHandle, RuleEditorProps>(
               tabSize: 2,
             }}
           />
+
+          {/* Drag-over overlay */}
+          {isDragOver && (
+            <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-indigo-900/80">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-10 w-10 text-indigo-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                />
+              </svg>
+              <span className="text-sm font-medium text-indigo-200">Drop JSON file to import</span>
+            </div>
+          )}
         </div>
       </div>
     )
