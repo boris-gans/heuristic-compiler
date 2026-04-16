@@ -23,7 +23,7 @@ const DEFAULT_RULES = `[
     },
     "consequent": {
       "action": "override",
-      "value": "card"
+      "value": "creditcard"
     }
   }
 ]`
@@ -31,7 +31,7 @@ const DEFAULT_RULES = `[
 const DEFAULT_INPUT: SimulationInput = {
   rulesJson: DEFAULT_RULES,
   features: { shop: '' },
-  labels: ['paypal', 'card', 'klarna'],
+  labels: ['paypal', 'creditcard', 'klarna'],
   probs: [0.5, 0.3, 0.2],
   probabilitiesNeeded: true,
 }
