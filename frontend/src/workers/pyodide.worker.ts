@@ -3,32 +3,93 @@
  *
  * Loads the Python runtime and HeuristicLayer, then handles simulation run requests.
  *
- * TODO (Issue #1): Implement Pyodide initialisation and HeuristicLayer execution.
- *   1. Load Pyodide from CDN: https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js
- *   2. Fetch /heuristic_layer.py and exec it in the Pyodide namespace.
- *   3. On { type: "run" } message: call HeuristicLayer.apply() and post back the result.
- *
  * Message protocol (see src/types/index.ts):
  *   Main → Worker:  WorkerMessage  ({ type: "run", payload: SimulationInput })
  *   Worker → Main:  WorkerResponse ({ type: "ready" | "result" | "error", ... })
  */
 
-import type { WorkerMessage, WorkerResponse } from '../types'
+import type { WorkerMessage, WorkerResponse, SimulationOutput } from '../types'
 
-// Notify the main thread that the worker script has been parsed.
-// Pyodide initialisation happens here in Issue #1.
-const readyResponse: WorkerResponse = { type: 'ready' }
-self.postMessage(readyResponse)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PyodideInterface = any
 
-self.onmessage = (event: MessageEvent<WorkerMessage>) => {
-  const { type } = event.data
+async function initPyodide(): Promise<PyodideInterface> {
+  // ES module workers cannot use importScripts; dynamic import is required.
+  // @vite-ignore tells Vite not to attempt to bundle this CDN URL.
+  const { loadPyodide } = await import(
+    /* @vite-ignore */
+    'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.mjs'
+  )
 
-  if (type === 'run') {
-    // TODO (Issue #1): execute HeuristicLayer.apply() via Pyodide and post result back.
-    const errorResponse: WorkerResponse = {
+  const pyodide: PyodideInterface = await loadPyodide()
+
+  // Fetch and exec heuristic_layer.py into the Pyodide global namespace.
+  const response = await fetch('/heuristic_layer.py')
+  if (!response.ok) {
+    throw new Error(`Failed to fetch heuristic_layer.py: ${response.status} ${response.statusText}`)
+  }
+  await pyodide.runPythonAsync(await response.text())
+
+  return pyodide
+}
+
+// Begin initialisation immediately; 'ready' is posted once complete.
+const pyodidePromise = initPyodide()
+
+pyodidePromise
+  .then(() => {
+    self.postMessage({ type: 'ready' } as WorkerResponse)
+  })
+  .catch((err: unknown) => {
+    self.postMessage({
       type: 'error',
-      message: 'Pyodide not yet initialised — see Issue #1',
-    }
-    self.postMessage(errorResponse)
+      message: `Pyodide init failed: ${err instanceof Error ? err.message : String(err)}`,
+    } as WorkerResponse)
+  })
+
+self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
+  if (event.data.type !== 'run') return
+
+  try {
+    const pyodide = await pyodidePromise
+    const { rulesJson, features, labels, probs, probabilitiesNeeded } = event.data.payload
+
+    // Serialize inputs to JSON so Python receives plain dicts/lists with no JsProxy issues.
+    const inputJson = JSON.stringify({ rulesJson, features, labels, probs, probabilitiesNeeded })
+    pyodide.globals.set('_input_json', inputJson)
+
+    // Construct a fresh HeuristicLayer per run (stateless worker).
+    // All Python exceptions propagate to JS with the full traceback in err.message.
+    const resultJson: string = await pyodide.runPythonAsync(`
+import json as _json
+import traceback as _tb
+
+_inp = _json.loads(_input_json)
+
+try:
+    _hl = HeuristicLayer()
+    _hl._rules = _hl._split_rules(_json.loads(_inp['rulesJson']))
+    _out_labels, _out_probs, _applied = _hl.apply(
+        probs=_inp['probs'],
+        labels=_inp['labels'],
+        features=_inp['features'],
+        probabilities_needed=_inp['probabilitiesNeeded'],
+    )
+    _json.dumps({
+        'labels': list(_out_labels) if _out_labels else [],
+        'probs': list(_out_probs) if _out_probs is not None else None,
+        'appliedRules': list(_applied) if _applied else [],
+    })
+except Exception as _e:
+    raise RuntimeError(_tb.format_exc()) from None
+`)
+
+    const output: SimulationOutput = JSON.parse(resultJson)
+    self.postMessage({ type: 'result', payload: output } as WorkerResponse)
+  } catch (err) {
+    self.postMessage({
+      type: 'error',
+      message: err instanceof Error ? err.message : String(err),
+    } as WorkerResponse)
   }
 }
