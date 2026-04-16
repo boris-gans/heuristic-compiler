@@ -1,10 +1,15 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import RuleEditor from './components/RuleEditor'
 import type { RuleEditorHandle } from './components/RuleEditor'
 import FeatureControls from './components/FeatureControls'
 import OutputPanel from './components/OutputPanel'
 import { usePyodideWorker } from './hooks/usePyodideWorker'
 import type { SimulationInput } from './types'
+
+const SPLIT_KEY = 'heuristic-split-ratio'
+const DEFAULT_SPLIT = 0.5
+const MIN_SPLIT = 0.2
+const MAX_SPLIT = 0.8
 
 const DEFAULT_RULES = `[
   {
@@ -31,10 +36,74 @@ const DEFAULT_INPUT: SimulationInput = {
   probabilitiesNeeded: true,
 }
 
+function readSplitRatio(): number {
+  try {
+    const saved = localStorage.getItem(SPLIT_KEY)
+    const parsed = saved ? parseFloat(saved) : NaN
+    return isNaN(parsed) ? DEFAULT_SPLIT : Math.min(MAX_SPLIT, Math.max(MIN_SPLIT, parsed))
+  } catch {
+    return DEFAULT_SPLIT
+  }
+}
+
+function writeSplitRatio(ratio: number): void {
+  try {
+    localStorage.setItem(SPLIT_KEY, String(ratio))
+  } catch {
+    // localStorage unavailable; ignore
+  }
+}
+
 export default function App() {
   const [input, setInput] = useState<SimulationInput>(DEFAULT_INPUT)
   const { status, output, error, run } = usePyodideWorker()
   const ruleEditorRef = useRef<RuleEditorHandle>(null)
+
+  // Split ratio state, persisted in localStorage
+  const [splitRatio, setSplitRatio] = useState<number>(readSplitRatio)
+
+  // Editor visibility toggle (for very small viewports)
+  const [showEditor, setShowEditor] = useState(false)
+
+  // Responsive breakpoints
+  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth)
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const isStacked = viewportWidth < 900
+  const isVerySmall = viewportWidth < 600
+  const editorVisible = isVerySmall ? showEditor : true
+
+  // Drag-to-resize refs
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isDragging = useRef(false)
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    isDragging.current = true
+    document.body.style.cursor = 'col-resize'
+    document.body.style.userSelect = 'none'
+  }
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging.current || !containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const ratio = (e.clientX - rect.left) / rect.width
+    const clamped = Math.min(MAX_SPLIT, Math.max(MIN_SPLIT, ratio))
+    setSplitRatio(clamped)
+    writeSplitRatio(clamped)
+  }
+
+  const handlePointerUp = () => {
+    if (!isDragging.current) return
+    isDragging.current = false
+    document.body.style.cursor = ''
+    document.body.style.userSelect = ''
+  }
 
   const handleRunClick = () => {
     run({ ...input, rulesJson: input.rulesJson })
@@ -53,28 +122,66 @@ export default function App() {
   return (
     <div className="flex h-full flex-col bg-white">
       {/* Header */}
-      <header className="flex items-center border-b border-gray-200 bg-white px-4 py-3">
+      <header className="flex shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-4 py-3">
         <h1 className="text-base font-semibold text-gray-800">Heuristic Compiler</h1>
-        <span className="ml-2 rounded bg-indigo-100 px-2 py-0.5 text-xs text-indigo-700">
+        <span className="rounded bg-indigo-100 px-2 py-0.5 text-xs text-indigo-700">
           {status}
         </span>
+        <span className="text-xs text-gray-400">Heuristic Rule Simulator</span>
+        {isVerySmall && (
+          <button
+            type="button"
+            onClick={() => setShowEditor((v) => !v)}
+            className="ml-auto shrink-0 rounded border border-indigo-200 px-2 py-0.5 text-xs text-indigo-600 hover:bg-indigo-50"
+          >
+            {showEditor ? 'Hide Editor' : 'Show Editor'}
+          </button>
+        )}
       </header>
 
       {/* Two-panel body */}
-      <div className="flex min-h-0 flex-1">
+      <div
+        ref={containerRef}
+        className={`flex min-h-0 flex-1 ${isStacked ? 'flex-col' : 'flex-row'}`}
+      >
         {/* Left panel — Rule Editor */}
-        {/* TODO (Issue #8): add drag-to-resize handle between panels */}
-        <div className="flex w-1/2 flex-col border-r border-gray-200">
-          <RuleEditor
-            ref={ruleEditorRef}
-            value={input.rulesJson}
-            onChange={(rulesJson) => setInput((prev) => ({ ...prev, rulesJson }))}
-            appliedRules={output?.appliedRules}
-          />
-        </div>
+        {editorVisible && (
+          <div
+            className={`flex min-h-0 flex-col ${
+              isStacked ? 'flex-1 border-b border-gray-200' : 'border-r border-gray-200'
+            }`}
+            style={isStacked ? undefined : { width: `${splitRatio * 100}%` }}
+          >
+            <RuleEditor
+              ref={ruleEditorRef}
+              value={input.rulesJson}
+              onChange={(rulesJson) => setInput((prev) => ({ ...prev, rulesJson }))}
+              appliedRules={output?.appliedRules}
+            />
+          </div>
+        )}
+
+        {/* Drag handle — horizontal layout only */}
+        {!isStacked && (
+          <div
+            className="group relative z-10 shrink-0 cursor-col-resize select-none transition-colors hover:bg-indigo-200 active:bg-indigo-300"
+            style={{ width: '6px' }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            aria-hidden="true"
+          >
+            {/* Grab dots indicator */}
+            <div className="pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="h-1 w-1 rounded-full bg-indigo-500" />
+              <div className="h-1 w-1 rounded-full bg-indigo-500" />
+              <div className="h-1 w-1 rounded-full bg-indigo-500" />
+            </div>
+          </div>
+        )}
 
         {/* Right panel — Controls + Output */}
-        <div className="flex w-1/2 flex-col">
+        <div className="flex min-h-0 flex-1 flex-col">
           {/* Feature controls (scrollable) */}
           <div className="flex-1 overflow-y-auto border-b border-gray-200">
             <div className="border-b border-gray-200 bg-gray-50 px-3 py-2">
@@ -87,8 +194,8 @@ export default function App() {
             />
           </div>
 
-          {/* Run button */}
-          <div className="border-b border-gray-200 px-3 py-2">
+          {/* Run button — fixed height, no shrink */}
+          <div className="shrink-0 border-b border-gray-200 px-3 py-2">
             <button
               onClick={handleRunClick}
               disabled={isRunDisabled}
@@ -99,8 +206,8 @@ export default function App() {
           </div>
 
           {/* Output panel (scrollable) */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="border-b border-gray-200 bg-gray-50 px-3 py-2">
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+            <div className="shrink-0 border-b border-gray-200 bg-gray-50 px-3 py-2">
               <span className="text-sm font-medium text-gray-600">Output</span>
             </div>
             <OutputPanel
