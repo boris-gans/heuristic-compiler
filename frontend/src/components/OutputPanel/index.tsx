@@ -42,14 +42,38 @@ function Spinner() {
   )
 }
 
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-4 p-3" aria-label="Loading output" aria-busy="true">
+      {/* Labels skeleton */}
+      <div className="space-y-2">
+        <div className="h-2.5 w-12 animate-pulse rounded bg-gray-200" />
+        {([80, 60, 45] as const).map((w, i) => (
+          <div key={i} className="flex items-center gap-2 py-1">
+            <div className="h-2.5 w-4 animate-pulse rounded bg-gray-200" />
+            <div className="h-2.5 animate-pulse rounded bg-gray-200" style={{ width: w }} />
+            <div className="h-2.5 w-8 animate-pulse rounded bg-gray-200" />
+            <div className="h-1.5 flex-1 animate-pulse rounded-full bg-gray-200" />
+          </div>
+        ))}
+      </div>
+      {/* Applied rules skeleton */}
+      <div className="space-y-2">
+        <div className="h-2.5 w-24 animate-pulse rounded bg-gray-200" />
+        {([70, 90, 55] as const).map((w, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div className="h-2.5 w-4 animate-pulse rounded bg-gray-200" />
+            <div className="h-2.5 animate-pulse rounded bg-gray-200" style={{ width: w }} />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const OutputPanel: FC<OutputPanelProps> = ({ status, output, error, onRuleClick }) => {
   if (status === 'loading') {
-    return (
-      <div className="flex h-full items-center justify-center text-sm text-gray-400">
-        <Spinner />
-        Loading Python runtime…
-      </div>
-    )
+    return <LoadingSkeleton />
   }
 
   if (status === 'running') {
