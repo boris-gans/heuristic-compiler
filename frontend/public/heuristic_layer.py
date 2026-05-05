@@ -140,7 +140,7 @@ class HeuristicLayer:
                     rule_name = rule.get("name", None)
                     rule_scope = rule.get("scope", [])
                     shop = features.get("shop")
-                    self._logger.info(f"[Heuristic Layer] Evaluating rule {rule_name} for shop {shop}")
+                    self._logger.debug(f"[Heuristic Layer] Evaluating rule {rule_name} for shop {shop}")
 
                     # Checking if the rule has to be applied for the current shop
                     if rule_scope:
@@ -471,6 +471,10 @@ class HeuristicLayer:
             - If expected is a string like "{field_name}", it will be replaced by features["field_name"].
             - If expected is a list/tuple, each element will be replaced if it is a string like "{field_name}".
         """
+        # "always" operator: rule always fires, ignores field/value
+        if operator == "always":
+            return True
+
         # If the actual value is None, return False
         if actual is None:
             return False
